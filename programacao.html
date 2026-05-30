@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Programação | SB Rooftop</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+
+/* RESET */
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    background:#f7f4ef;
+    overflow-x:hidden;
+    color:#111;
+}
+
+/* HERO */
+.hero{
+    width:100%;
+    height:45vh; /* Ajustado para 45vh para dar mais foco direto na programação */
+
+    background:
+    linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
+    url(012.jpeg);
+
+    background-size:cover;
+    background-position:center;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    text-align:center;
+}
+
+.hero-content h1{
+    font-family:'Cormorant Garamond', serif;
+    font-size:76px;
+    font-weight:300;
+    color:#fff;
+    margin-bottom:15px;
+    letter-spacing:2px;
+}
+
+.hero-content p{
+    font-family:'Montserrat', sans-serif;
+    color:#ddd;
+    font-size:12px;
+    letter-spacing:5px;
+    font-weight:400;
+}
+
+/* SEÇÃO DA PROGRAMAÇÃO */
+.programacao-section {
+    width:100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 80px 6%;
+    text-align: center;
+}
+
+.section-intro {
+    font-family:'Montserrat', sans-serif;
+    font-size:12px;
+    letter-spacing:4px;
+    color:#a58f72;
+    margin-bottom: 50px;
+    text-transform: uppercase;
+}
+
+/* GRID DE EVENTOS */
+.events-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 40px;
+    margin-bottom: 60px;
+    text-align: left;
+}
+
+/* CARD DE EVENTO INDIVIDUAL */
+.event-card {
+    background: #ffffff;
+    padding: 40px 35px;
+    border-radius: 4px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.03);
+    border: 1px solid rgba(165,143,114, 0.15); /* Linha sutil com o tom bege do site */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.event-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(165,143,114, 0.12);
+}
+
+.event-day {
+    font-family:'Montserrat', sans-serif;
+    font-size:11px;
+    letter-spacing:3px;
+    color:#a58f72;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: 15px;
+    display: block;
+}
+
+.event-card h3 {
+    font-family:'Cormorant Garamond', serif;
+    font-size:32px;
+    font-weight:400;
+    line-height: 1.2;
+    margin-bottom: 15px;
+    color:#111;
+}
+
+.event-card p {
+    font-family:'Montserrat', sans-serif;
+    font-size:14px;
+    line-height:1.8;
+    color:#666;
+}
+
+/* BOTÃO DE VOLTAR (HOME) */
+.contact-btn{
+    display:inline-block;
+    padding:14px 45px;
+    border:1px solid #111;
+    text-decoration:none;
+    color:#111;
+    font-family:'Montserrat', sans-serif;
+    font-size:12px;
+    letter-spacing:3px;
+    font-weight: 500;
+    transition:0.3s ease;
+    margin-top: 20px;
+}
+
+.contact-btn:hover{
+    background:#111;
+    color:#fff;
+}
+
+/* RESPONSIVO */
+@media(max-width:768px){
+
+    .hero-content h1{
+        font-size:52px;
+    }
+    
+    .hero {
+        height: 35vh;
+    }
+
+    .programacao-section {
+        padding: 50px 6%;
+    }
+
+    .events-grid {
+        grid-template-columns: 1fr;
+        gap: 25px;
+    }
+    
+    .event-card {
+        padding: 30px 25px;
+    }
+
+    .event-card h3 {
+        font-size:28px;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<section class="hero">
+    <div class="hero-content">
+        <h1>Programação</h1>
+        <p>APROVEITE AS MELHORES NOITES NO SB ROOFTOP</p>
+    </div>
+</section>
+
+<section class="programacao-section">
+    
+    <div class="section-intro">Agenda Cultural Semanal</div>
+
+    <div class="events-grid">
+
+        <div class="event-card">
+            <div>
+                <span class="event-day">Quinta • A partir das 19h</span>
+                <h3>Rooftop Jazz & Soft Drinks</h3>
+            </div>
+            <p>Uma noite instrumental relaxante com o melhor do jazz contemporâneo para acompanhar nossos drinks autorais.</p>
+        </div>
+
+        <div class="event-card">
+            <div>
+                <span class="event-day">Sexta • A partir das 20h</span>
+                <h3>Sextou no Rooftop</h3>
+            </div>
+            <p>Abertura do fim de semana com DJs convidados trazendo o melhor da House Music e ritmos modernos para badalar a noite.</p>
+        </div>
+
+        <div class="event-card">
+            <div>
+                <span class="event-day">Sábado • A partir das 18h</span>
+                <h3>Sunset Pagode & Samba</h3>
+            </div>
+            <p>O melhor do pagode retrô e atual com o grupo da casa. Curta o pôr do sol com uma cerveja gelada e vista privilegiada de São Brás.</p>
+        </div>
+
+        <div class="event-card">
+            <div>
+                <span class="event-day">Domingo • 12h às 16h</span>
+                <h3>Almoço Especial & MPB</h3>
+            </div>
+            <p>Sua tarde de domingo com música ambiente de alta qualidade, resgatando clássicos da MPB enquanto saboreia nosso menu.</p>
+        </div>
+
+    </div>
+
+    <a href="index.html" class="contact-btn">HOME</a>
+
+</section>
+
+</body>
+</html>

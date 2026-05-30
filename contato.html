@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Localização & Contato</title>
+
+<!-- GOOGLE FONTS -->
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+
+/* RESET */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    background:#f7f4ef;
+    overflow-x:hidden;
+    color:#111;
+}
+
+/* HERO */
+
+.hero{
+    width:100%;
+    height:55vh;
+
+    background:
+    linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
+    url(012.jpeg);
+
+    background-size:cover;
+    background-position:center;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    text-align:center;
+}
+
+.hero-content h1{
+    font-family:'Cormorant Garamond', serif;
+    font-size:88px;
+    font-weight:300;
+
+    color:#fff;
+
+    margin-bottom:15px;
+}
+
+.hero-content p{
+    font-family:'Montserrat', sans-serif;
+    color:#ddd;
+
+    font-size:13px;
+    letter-spacing:4px;
+}
+
+/* CONTACT SECTION */
+
+.contact-section{
+    width:100%;
+    padding:120px 8%;
+
+    display:flex;
+    gap:90px;
+
+    align-items:flex-start;
+    justify-content:center;
+}
+
+/* LEFT SIDE */
+
+.contact-left{
+    flex:1;
+    max-width:550px;
+}
+
+.small-title{
+    font-family:'Montserrat', sans-serif;
+    font-size:12px;
+
+    letter-spacing:4px;
+    color:#a58f72;
+
+    margin-bottom:25px;
+}
+
+.contact-left h2{
+    font-family:'Cormorant Garamond', serif;
+    font-size:72px;
+    font-weight:300;
+
+    line-height:1.05;
+
+    margin-bottom:40px;
+
+    color:#111;
+}
+
+.contact-left p{
+    font-family:'Montserrat', sans-serif;
+    font-size:16px;
+
+    line-height:2;
+
+    color:#666;
+
+    margin-bottom:35px;
+}
+
+/* INFO BLOCKS */
+
+.info{
+    margin-bottom:35px;
+}
+
+.info h3{
+    font-family:'Cormorant Garamond', serif;
+    font-size:34px;
+    font-weight:400;
+
+    margin-bottom:10px;
+
+    color:#111;
+}
+
+.info span{
+    font-family:'Montserrat', sans-serif;
+    color:#666;
+
+    line-height:2;
+    font-size:15px;
+
+    display:block;
+}
+
+/* BUTTON */
+
+.contact-btn{
+    display:inline-block;
+
+    margin-top:20px;
+
+    padding:15px 40px;
+
+    border:1px solid #111;
+
+    text-decoration:none;
+
+    color:#111;
+
+    font-family:'Montserrat', sans-serif;
+
+    font-size:13px;
+
+    letter-spacing:2px;
+
+    transition:0.4s ease;
+}
+
+.contact-btn:hover{
+    background:#111;
+    color:#fff;
+}
+
+/* RIGHT SIDE */
+
+.contact-right{
+    flex:1;
+}
+
+/* MAP */
+
+.map{
+    width:100%;
+    height:700px;
+
+    overflow:hidden;
+}
+
+.map iframe{
+    width:100%;
+    height:100%;
+
+    border:0;
+
+    filter:grayscale(100%) contrast(95%);
+}
+
+/* RESPONSIVE */
+
+@media(max-width:1100px){
+
+    .contact-section{
+        flex-direction:column;
+        gap:60px;
+    }
+
+    .contact-left{
+        max-width:100%;
+    }
+
+    .map{
+        height:500px;
+    }
+
+}
+
+@media(max-width:700px){
+
+    .hero-content h1{
+        font-size:56px;
+    }
+
+    .contact-left h2{
+        font-size:48px;
+    }
+
+    .contact-section{
+        padding:80px 6%;
+    }
+
+    .map{
+        height:400px;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- HERO -->
+
+<section class="hero">
+
+    <div class="hero-content">
+        <h1>Localização</h1>
+        <p>VISITE NOSSO RESTAURANTE</p>
+    </div>
+
+</section>
+
+<!-- CONTACT SECTION -->
+
+<section class="contact-section">
+
+    <!-- LEFT -->
+
+    <div class="contact-left">
+
+        <span class="small-title">CONTATO</span>
+
+        <h2>
+            No coração de São Brás.
+        </h2>
+
+        <p>
+            Localizado no segundo piso do novo Mercado de São Brás,
+            o SB Rooftop oferece uma vista privilegiada e uma atmosfera única
+            no coração de Belém, na Avenida José Bonifácio.
+        </p>
+
+        <!-- ADDRESS -->
+
+        <div class="info">
+
+            <h3>Endereço</h3>
+
+            <span>
+                Av. José Bonifácio - São Brás, Belém, PA.
+            </span>
+
+        </div>
+
+        <!-- CONTACT -->
+
+        <div class="info">
+
+            <h3>Contato</h3>
+
+            <span>
+                +55 (91) 98304-2701<br>
+                reservas@restaurante.com
+            </span>
+
+        </div>
+
+        <!-- HOURS -->
+
+        <div class="info">
+
+            <h3>Horário de funcionamento</h3>
+
+            <span>
+                Terça a Quinta + Domingo: Almoço de 11h às 15h. / Jantar de 18h às 00h.<br>
+                Sexta e Sábado: Jantar de 18h às 01h.
+            </span>
+
+        </div>
+
+        <a href="index.html" class="contact-btn">HOME</a>
+
+    </div>
+
+    <!-- RIGHT -->
+
+    <div class="contact-right">
+
+        <div class="map">
+
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.5380058016926!2d-48.47076772602478!3d-1.4515467358269891!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x92a48d006e454a3f%3A0x1250371b59b4c1cb!2sSB%20Rooftop!5e0!3m2!1spt-BR!2sbr!4v1780090327401!5m2!1spt-BR!2sbr" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+
+        </div>
+
+    </div>
+
+</section>
+
+</body>
+</html>

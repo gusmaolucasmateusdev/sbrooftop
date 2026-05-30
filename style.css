@@ -1,0 +1,362 @@
+:root {
+    --bg: #0b0b0b;
+    --light: #fff;
+    --soft: #d0d0d0;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: black;
+    font-family: 'Inter', sans-serif;
+    overflow: hidden;
+}
+
+/* SIDEBAR (DESKTOP) */
+.sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 260px;
+    height: 100vh;
+    background: black;
+    border-right: 1px solid rgba(255,255,255,0.06);
+    padding: 50px 40px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo img {
+    width: 180px;
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+    display: block;
+}
+
+.sidebar-nav {
+    margin-top: 60px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.sidebar-nav a {
+    color: #999;
+    text-decoration: none;
+    font-size: 13px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    transition: 0.4s;
+}
+
+.sidebar-nav a:hover {
+    color: white;
+    transform: translateX(6px);
+}
+
+.sidebar-socials {
+    margin-top: 25px;
+    display: flex;
+    gap: 15px;
+    padding: 0 5px;
+}
+
+.sidebar-socials a {
+    color: #ffffff;
+    font-size: 1.3rem;
+    transition: color 0.3s ease;
+    text-decoration: none;
+}
+
+.sidebar-socials a:hover {
+    color: #ffffff; /* Corrigido para branco */
+}
+
+.sidebar-bottom {
+    color: #666;
+    font-size: 11px;
+    letter-spacing: 2px;
+    line-height: 1.5;
+}
+
+/* SLIDER */
+.slider-wrapper {
+    margin-left: 260px;
+    width: calc(100% - 260px);
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+}
+
+.slider {
+    display: flex;
+    height: 100%;
+    transition: 1s cubic-bezier(.77,0,.18,1);
+}
+
+.slide {
+    min-width: 100%;
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+}
+
+.slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scale(1.05);
+    animation: zoom 8s ease infinite alternate;
+}
+
+.slide::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.65));
+}
+
+/* CONTENT */
+.slide-content {
+    position: absolute;
+    left: 8%;
+    bottom: 12%;
+    z-index: 10;
+    max-width: 700px;
+    color: white;
+}
+
+.slide-tag {
+    color: var(--soft); /* Mudado para o cinza claro do seu root */
+    letter-spacing: 4px;
+    font-size: 12px;
+    text-transform: uppercase;
+}
+
+.slide-content h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(45px, 7vw, 100px);
+    line-height: 0.95;
+    margin: 25px 0;
+}
+
+.slide-content p {
+    max-width: 550px;
+    color: #ddd;
+    line-height: 1.8;
+    margin-bottom: 40px;
+}
+
+/* BUTTON */
+.btn {
+    display: inline-block;
+    padding: 16px 32px;
+    background: white;
+    color: black;
+    border: 1px solid white;
+    text-decoration: none;
+    letter-spacing: 2px;
+    font-size: 12px;
+    text-transform: uppercase;
+    transition: 0.4s;
+}
+
+.btn:hover {
+    transform: translateY(-4px);
+}
+
+/* CONTROLS */
+.slider-controls {
+    position: absolute;
+    right: 50px;
+    bottom: 50px;
+    display: flex;
+    gap: 12px;
+    z-index: 20;
+}
+
+.slider-controls button {
+    width: 65px;
+    height: 65px;
+    border: none;
+    background: rgba(255,255,255,0.12);
+    backdrop-filter: blur(10px);
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    transition: 0.4s;
+}
+
+.slider-controls button:hover {
+    background: white;
+    color: black;
+}
+
+/* MOBILE ELEMENTS DEFAULT */
+.mobile-header {
+    display: none;
+}
+
+.mobile-menu {
+    display: none;
+}
+
+/* ANIMATION */
+@keyframes zoom {
+    from { transform: scale(1.05); }
+    to { transform: scale(1.15); }
+}
+
+/* RESPONSIVE (MOBILE & TABLET) */
+@media(max-width: 900px) {
+    body {
+        overflow: hidden;
+    }
+
+    .sidebar {
+        display: none !important;
+    }
+
+    .slider-wrapper {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    /* HEADER FIXO NO TOPO */
+    .mobile-header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        padding: 20px 25px;
+        z-index: 2000;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%);
+    }
+
+    .mobile-header .logo img {
+        width: 110px;
+    }
+
+    /* BOTÃO HAMBÚRGUER PREMIUM */
+    .menu-toggle {
+        width: 30px;
+        height: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        cursor: pointer;
+        z-index: 2100;
+    }
+
+    .menu-toggle span {
+        width: 100%;
+        height: 2px;
+        background: white;
+        transition: 0.3s ease;
+    }
+
+    .mobile-header.active .menu-toggle span:nth-child(1) {
+        transform: translateY(9px) rotate(45deg);
+    }
+
+    .mobile-header.active .menu-toggle span:nth-child(2) {
+        transform: translateY(-9px) rotate(-45deg);
+    }
+
+    /* MENU MOBILE (TELA CHEIA) */
+    .mobile-menu {
+        position: fixed;
+        inset: 0;
+        background: #0b0b0b;
+        z-index: 1900;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 25px;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-20px);
+        transition: all 0.5s cubic-bezier(0.77,0,.18,1);
+    }
+
+    .mobile-menu.active {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+
+    .mobile-menu a {
+        color: white;
+        text-decoration: none;
+        font-size: 28px;
+        font-family: 'Cormorant Garamond', serif;
+        letter-spacing: 2px;
+        transition: color 0.3s;
+    }
+
+    .mobile-menu a:hover {
+        color: #ffffff; /* Corrigido para branco */
+    }
+
+    .mobile-socials {
+        display: flex;
+        justify-content: center;
+        gap: 25px;
+        margin-top: 20px;
+    }
+
+    .mobile-socials a {
+        color: #ffffff;
+        font-size: 1.5rem;
+        transition: color 0.3s ease;
+    }
+
+    .mobile-socials a:hover {
+        color: #ffffff; /* Corrigido para branco */
+    }
+
+    /* ELEMENTOS DO SLIDER NO MOBILE */
+    .slide-content {
+        left: 25px;
+        right: 25px;
+        bottom: 100px;
+    }
+
+    .slide-content h1 {
+        font-size: 46px;
+        margin: 15px 0;
+    }
+
+    .slide-content p {
+        font-size: 14px;
+        margin-bottom: 30px;
+    }
+
+    .slider-controls {
+        right: 25px;
+        bottom: 25px;
+    }
+
+    .slider-controls button {
+        width: 50px;
+        height: 50px;
+        font-size: 18px;
+    }
+}

@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Reservas</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Montserrat:wght@300;400;500;600&display=swap');
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:'Montserrat', sans-serif;
+
+    background:#f7f4ef;
+
+    min-height:100vh;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    padding:25px;
+
+    color:white;
+}
+
+.container{
+    width:100%;
+
+    max-width:560px;
+
+    background:#1a1d21;
+
+    border:1px solid rgba(255,255,255,0.05);
+
+    border-radius:26px;
+
+    padding:45px;
+
+    box-shadow:0 15px 40px rgba(0,0,0,0.35);
+}
+
+.topo{
+    text-align:center;
+
+    margin-bottom:18px;
+}
+
+.topo span{
+    color:white;
+
+    border:1px solid rgba(212,175,55,0.35);
+
+    padding:8px 18px;
+
+    border-radius:40px;
+
+    font-size:12px;
+
+    letter-spacing:3px;
+
+    display:inline-block;
+}
+
+h2{
+    text-align:center;
+
+    font-family:'Cormorant Garamond', serif;
+
+    font-size:2.4rem;
+
+    color:#ffffff;
+
+    margin-bottom:12px;
+
+    letter-spacing:2px;
+}
+
+.subtitulo{
+    text-align:center;
+
+    color:#a9a9a9;
+
+    font-size:15px;
+
+    line-height:1.7;
+
+    margin-bottom:35px;
+}
+
+.campo{
+    margin-bottom:22px;
+}
+
+label{
+    display:block;
+
+    margin-bottom:8px;
+
+    color:#f3f3f3;
+
+    font-size:15px;
+
+    font-weight:500;
+}
+
+.opcional{
+    color:#888;
+
+    font-size:13px;
+
+    font-weight:400;
+}
+
+input,
+select{
+    width:100%;
+
+    padding:15px;
+
+    border-radius:14px;
+
+    border:1px solid #2b2f35;
+
+    background:#111315;
+
+    color:white;
+
+    font-size:15px;
+
+    outline:none;
+
+    transition:0.3s;
+}
+
+input::placeholder{
+    color:#777;
+}
+
+input:focus,
+select:focus{
+    border-color:white;
+
+    box-shadow:0 0 0 4px rgba(212,175,55,0.10);
+}
+
+select option{
+    background:#111315;
+    color:white;
+}
+
+button{
+    width:100%;
+
+    padding:16px;
+
+    border:none;
+
+    border-radius:14px;
+
+    margin-top:10px;
+
+    background:white;
+
+    color:#111;
+
+    font-size:16px;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+    transition:0.3s;
+}
+
+button:hover{
+    transform:translateY(-2px);
+
+    background:white;
+
+    box-shadow:0 10px 20px rgba(212,175,55,0.18);
+}
+
+button:disabled{
+    opacity:0.5;
+
+    cursor:not-allowed;
+
+    transform:none;
+
+    box-shadow:none;
+}
+
+.rodape{
+    text-align:center;
+
+    margin-top:25px;
+
+    color:#777;
+
+    font-size:13px;
+
+    line-height:1.6;
+}
+
+/* ESTRUTURA DO ALERTA CUSTOMIZADO (MODAL) */
+.custom-alert-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.75);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.custom-alert-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.custom-alert-box {
+    background: #1a1d21;
+    border: 1px solid rgba(255, 255, 255, 0.2); /* Alterado de dourado para branco transparente */
+    border-radius: 20px;
+    padding: 30px;
+    width: 90%;
+    max-width: 420px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    transform: scale(0.8);
+    transition: transform 0.3s ease;
+}
+
+.custom-alert-overlay.active .custom-alert-box {
+    transform: scale(1);
+}
+
+.custom-alert-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.8rem;
+    color: #FFFFFF; /* Alterado de #D4AF37 (dourado) para #FFFFFF (branco) */
+    margin-bottom: 15px;
+    letter-spacing: 1px;
+}
+
+.custom-alert-message {
+    color: #e0e0e0;
+    font-size: 15px;
+    line-height: 1.6;
+    margin-bottom: 25px;
+}
+
+.custom-alert-btn {
+    background: white;
+    color: #111;
+    border: none;
+    padding: 12px 35px;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.custom-alert-btn:hover {
+    background: #fff;
+}
+
+@media(max-width:600px){
+
+    .container{
+        padding:30px 24px;
+    }
+
+    h2{
+        font-size:2rem;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>Reservas</h2>
+
+    <p class="subtitulo">
+        Faça sua reserva através do nosso sistema de reservas.
+    </p>
+
+    <form id="form-reserva">
+
+        <div class="campo">
+            <label for="nome">Seu Nome</label>
+            <input type="text" id="nome" required placeholder="Digite seu nome completo">
+        </div>
+
+        <div class="campo">
+            <label for="whatsapp">Seu WhatsApp</label>
+            <input type="tel" id="whatsapp" required placeholder="(91) 99999-9999">
+        </div>
+
+        <div class="campo">
+            <label for="email">
+                E-mail
+                <span class="opcional">(Opcional)</span>
+            </label>
+
+            <input type="email" id="email" placeholder="seu-email@exemplo.com">
+        </div>
+
+        <div class="campo">
+            <label for="pessoas">Número de Pessoas</label>
+
+            <select id="pessoas" required>
+                <option value="4">4 pessoas</option>
+                <option value="5">5 pessoas</option>
+                <option value="6">6 pessoas</option>
+                <option value="7">7 pessoas</option>
+                <option value="8+">Mais de 8 pessoas</option>
+            </select>
+        </div>
+
+        <div class="campo">
+            <label for="data">Data da Reserva</label>
+            <input type="date" id="data" required>
+        </div>
+
+        <div class="campo">
+            <label for="horario">Horário Disponível</label>
+
+            <select id="horario" required disabled>
+                <option value="">
+                    Selecione uma data primeiro...
+                </option>
+            </select>
+        </div>
+
+        <button type="submit" id="btn-enviar" disabled>
+            Reservar
+        </button>
+
+    </form>
+
+    <div class="rodape">
+        Sua reserva será enviada diretamente para o nosso sistema.
+    </div>
+
+</div>
+
+<!-- COMPONENTE DE ALERTA PERSONALIZADO -->
+<div id="customAlert" class="custom-alert-overlay">
+    <div class="custom-alert-box">
+        <div class="custom-alert-title" id="customAlertTitle">SB Rooftop</div>
+        <div class="custom-alert-message" id="customAlertMessage">Mensagem de sucesso.</div>
+        <button class="custom-alert-btn" id="customAlertBtn">Ok</button>
+    </div>
+</div>
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+
+import {
+    getDatabase,
+    ref,
+    set,
+    push,
+    get,
+    child
+
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+const firebaseConfig = {
+
+    apiKey: "AIzaSyBfVK_wdEcilwjNaByZUZBG_kALmThV5JA",
+
+    authDomain: "alto-do-parque.firebaseapp.com",
+
+    projectId: "alto-do-parque",
+
+    storageBucket: "alto-do-parque.firebasestorage.app",
+
+    messagingSenderId: "435706186663",
+
+    appId: "1:435706186663:web:9eadc1d4371376768ac482",
+
+    databaseURL: "https://alto-do-parque-default-rtdb.firebaseio.com"
+
+};
+
+const app = initializeApp(firebaseConfig);
+
+const db = getDatabase(app);
+
+const EMPRESA_ID = "alto_do_parque";
+
+const horariosFuncionamento = [
+    "18:00",
+    "19:00",
+    "20:00",
+    "21:00",
+    "22:00"
+];
+
+const inputData = document.getElementById('data');
+
+const selectHorario = document.getElementById('horario');
+
+const btnEnviar = document.getElementById('btn-enviar');
+
+const formReserva = document.getElementById('form-reserva');
+
+// Captura dos elementos do Alerta Customizado
+const customAlert = document.getElementById('customAlert');
+const customAlertTitle = document.getElementById('customAlertTitle');
+const customAlertMessage = document.getElementById('customAlertMessage');
+const customAlertBtn = document.getElementById('customAlertBtn');
+
+// Função prática para chamar o Alerta no lugar do "alert()" do navegador
+function mostrarAlerta(titulo, mensagem) {
+    customAlertTitle.textContent = titulo;
+    customAlertMessage.textContent = mensagem;
+    customAlert.classList.add('active');
+}
+
+// Fecha o alerta ao clicar no botão "Ok"
+customAlertBtn.addEventListener('click', () => {
+    customAlert.classList.remove('active');
+});
+
+inputData.addEventListener('change', async () => {
+
+    const dataSelecionada = inputData.value;
+
+    if (!dataSelecionada) return;
+
+    selectHorario.innerHTML = `
+        <option value="">
+            Carregando horários...
+        </option>
+    `;
+
+    selectHorario.disabled = true;
+
+    btnEnviar.disabled = true;
+
+    try {
+
+        const dbRef = ref(db);
+
+        const snapshot = await get(
+            child(
+                dbRef,
+                `agendamentos/${EMPRESA_ID}/${dataSelecionada}`
+            )
+        );
+
+        const horariosOcupados = [];
+
+        if (snapshot.exists()) {
+
+            snapshot.forEach((childSnapshot) => {
+
+                horariosOcupados.push(
+                    childSnapshot.val().horario
+                );
+
+            });
+
+        }
+
+        selectHorario.innerHTML = `
+            <option value="">
+                Escolha o melhor horário
+            </option>
+        `;
+
+        horariosFuncionamento.forEach(horario => {
+
+            if (!horariosOcupados.includes(horario)) {
+
+                const option = document.createElement('option');
+
+                option.value = horario;
+
+                option.textContent = horario;
+
+                selectHorario.appendChild(option);
+
+            }
+
+        });
+
+        selectHorario.disabled = false;
+
+        btnEnviar.disabled = false;
+
+    } catch (error) {
+
+        console.error(
+            "Erro ao buscar horários:",
+            error
+        );
+
+        selectHorario.innerHTML = `
+            <option value="">
+                Erro ao carregar horários
+            </option>
+        `;
+
+    }
+
+});
+
+formReserva.addEventListener('submit', async (e) => {
+
+    e.preventDefault();
+
+    btnEnviar.disabled = true;
+
+    btnEnviar.textContent = "Processando...";
+
+    const nome = document.getElementById('nome').value;
+
+    const whatsappCliente = document.getElementById('whatsapp').value;
+
+    const emailCliente =
+        document.getElementById('email').value
+        || "Não informado";
+
+    const qtdPessoas =
+        document.getElementById('pessoas').value;
+
+    const data = inputData.value;
+
+    // Formata a data de AAAA-MM-DD para DD/MM/AAAA para exibir de forma elegante no alerta
+    const dataFormatada = data.split('-').reverse().join('/');
+
+    const horario = selectHorario.value;
+
+    const dadosAgendamento = {
+
+        clienteNome: nome,
+
+        clienteWhatsapp: whatsappCliente,
+
+        clienteEmail: emailCliente,
+
+        quantidadePessoas: qtdPessoas,
+
+        horario: horario,
+
+        criadoEm: new Date().toISOString()
+
+    };
+
+    try {
+        // 1. Salva os dados no Firebase
+        const novaReservaRef = push(ref(db, `agendamentos/${EMPRESA_ID}/${data}`));
+        await set(novaReservaRef, dadosAgendamento);
+
+        // 2. Chamei a função que simula o alert, mostrando "SB Rooftop" com segurança
+        mostrarAlerta(
+            "SB Rooftop", 
+            `Obrigado, ${nome}! Sua reserva para o dia ${dataFormatada} às ${horario} foi realizada com sucesso.`
+        );
+
+        // 3. Reseta o formulário para o próximo cliente
+        formReserva.reset();
+        selectHorario.disabled = true;
+        selectHorario.innerHTML = '<option value="">Selecione uma data primeiro...</option>';
+        btnEnviar.textContent = "Reservar";
+
+    } catch (error) {
+        console.error("Erro ao salvar agendamento:", error);
+        mostrarAlerta("SB Rooftop", "Houve um erro ao salvar sua reserva. Tente novamente.");
+        btnEnviar.disabled = false;
+        btnEnviar.textContent = "Reservar";
+    }
+
+});
+
+</script>
+
+</body>
+</html>

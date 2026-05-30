@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Sobre</title>
+
+<!-- GOOGLE FONTS -->
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+
+/* RESET */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    background:#f7f4ef;
+    color:#111;
+    overflow-x:hidden;
+}
+
+/* ABOUT SECTION */
+
+.about{
+    width:100%;
+    min-height:100vh;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    padding:120px 8%;
+
+    gap:90px;
+}
+
+/* IMAGE */
+
+.about-image{
+    flex:1;
+    position:relative;
+}
+
+.about-image img{
+    width:100%;
+    height:850px;
+
+    object-fit:cover;
+
+    border-radius:2px;
+
+    transition:0.5s ease;
+}
+
+.about-image img:hover{
+    transform:scale(1.01);
+}
+
+/* CONTENT */
+
+.about-content{
+    flex:1;
+    max-width:560px;
+}
+
+.subtitle{
+    font-family:'Montserrat', sans-serif;
+    font-size:12px;
+
+    letter-spacing:4px;
+
+    color:#a58f72;
+
+    margin-bottom:25px;
+
+    display:block;
+}
+
+.about-content h1{
+    font-family:'Cormorant Garamond', serif;
+
+    font-size:78px;
+    font-weight:300;
+
+    line-height:1;
+
+    margin-bottom:45px;
+
+    color:#111;
+}
+
+.about-content p{
+    font-family:'Montserrat', sans-serif;
+
+    font-size:17px;
+
+    line-height:2.1;
+
+    color:#555;
+
+    margin-bottom:28px;
+
+    font-weight:300;
+}
+
+/* SMALL DETAILS */
+
+.line{
+    width:70px;
+    height:1px;
+
+    background:#c6b49b;
+
+    margin-bottom:35px;
+}
+
+/* BUTTON */
+
+.about-btn{
+    display:inline-block;
+
+    margin-top:20px;
+
+    padding:15px 40px;
+
+    border:1px solid #111;
+
+    text-decoration:none;
+
+    color:#111;
+
+    font-family:'Montserrat', sans-serif;
+
+    font-size:13px;
+
+    letter-spacing:2px;
+
+    transition:0.4s ease;
+}
+
+.about-btn:hover{
+    background:#111;
+    color:#fff;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:1100px){
+
+    .about{
+        flex-direction:column;
+        gap:60px;
+        padding:80px 7%;
+    }
+
+    .about-image img{
+        height:600px;
+    }
+
+    .about-content{
+        max-width:100%;
+    }
+
+    .about-content h1{
+        font-size:58px;
+    }
+
+}
+
+@media(max-width:700px){
+
+    .about{
+        padding:60px 6%;
+    }
+
+    .about-image img{
+        height:450px;
+    }
+
+    .about-content h1{
+        font-size:44px;
+    }
+
+    .about-content p{
+        font-size:15px;
+        line-height:1.9;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<section class="about">
+
+    <!-- IMAGE -->
+    <div class="about-image">
+        <img src="011.jpeg" alt="Restaurant Interior">
+    </div>
+
+    <!-- CONTENT -->
+    <div class="about-content">
+
+        <span class="subtitle">NOSSA HISTÓRIA</span>
+
+        <div class="line"></div>
+
+        <h1>Filosofia</h1>
+
+        <p>
+            No SB Rooftop, cada prato e drink começa com o respeito
+            a nossa culinária e cultura Paraense sem esquecer do requinte
+            clássico. Nossos pratos e drinks combinam técnicas tradicionais com 
+            a criatividade contemporânea. O resultado são sabores intensos, 
+            autênticos e refinidos, que combinam com a nossa terra. Acreditamos
+            que sentar-se à mesa deve ser mais do que uma refeição - deve ser
+            uma imersão sensorial e cultural.
+        </p>
+
+        <p>
+            O SB Rooftop foi elaborado e criado em Outubro de 2025, 
+            como o primeiro Rooftop de Belém-PA, trazendo ideias dos 
+            Rooftops mais requintados do Brasil, misturado com a 
+            cultura Paraense do patrimônio histórico que é o 
+            Mercado de São Brás.
+        </p>
+
+        <a href="index.html" class="about-btn">HOME</a>
+
+    </div>
+
+</section>
+
+</body>
+</html>
