@@ -242,7 +242,7 @@ button:disabled{
 
 .custom-alert-box {
     background: #1a1d21;
-    border: 1px solid rgba(255, 255, 255, 0.2); /* Alterado de dourado para branco transparente */
+    border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 20px;
     padding: 30px;
     width: 90%;
@@ -260,7 +260,7 @@ button:disabled{
 .custom-alert-title {
     font-family: 'Cormorant Garamond', serif;
     font-size: 1.8rem;
-    color: #FFFFFF; /* Alterado de #D4AF37 (dourado) para #FFFFFF (branco) */
+    color: #FFFFFF;
     margin-bottom: 15px;
     letter-spacing: 1px;
 }
@@ -342,7 +342,10 @@ button:disabled{
                 <option value="5">5 pessoas</option>
                 <option value="6">6 pessoas</option>
                 <option value="7">7 pessoas</option>
-                <option value="8+">Mais de 8 pessoas</option>
+                <option value="8">8 pessoas</option>
+                <option value="10">10 pessoas</option>
+                <option value="15">15 pessoas</option>
+                <option value="20+">Mais de 20 pessoas</option>
             </select>
         </div>
 
@@ -373,7 +376,6 @@ button:disabled{
 
 </div>
 
-<!-- COMPONENTE DE ALERTA PERSONALIZADO -->
 <div id="customAlert" class="custom-alert-overlay">
     <div class="custom-alert-box">
         <div class="custom-alert-title" id="customAlertTitle">SB Rooftop</div>
@@ -436,6 +438,8 @@ const btnEnviar = document.getElementById('btn-enviar');
 
 const formReserva = document.getElementById('form-reserva');
 
+const selectPessoas = document.getElementById('pessoas');
+
 // Captura dos elementos do Alerta Customizado
 const customAlert = document.getElementById('customAlert');
 const customAlertTitle = document.getElementById('customAlertTitle');
@@ -454,7 +458,32 @@ customAlertBtn.addEventListener('click', () => {
     customAlert.classList.remove('active');
 });
 
+// Listener para quando o usuário alterar a quantidade de pessoas
+selectPessoas.addEventListener('change', () => {
+    if (selectPessoas.value === "20+") {
+        // Se for mais de 20 pessoas, não há necessidade de escolher horário ou validar data do banco
+        selectHorario.innerHTML = `<option value="WhatsApp">Tratar via WhatsApp</option>`;
+        selectHorario.disabled = true;
+        btnEnviar.disabled = false;
+        btnEnviar.textContent = "Chamar no WhatsApp";
+    } else {
+        // Caso mude de volta para menos de 20, restaura o fluxo normal
+        btnEnviar.textContent = "Reservar";
+        if (!inputData.value) {
+            selectHorario.innerHTML = `<option value="">Selecione uma data primeiro...</option>`;
+            selectHorario.disabled = true;
+            btnEnviar.disabled = true;
+        } else {
+            // Dispara a busca de horários novamente para a data selecionada
+            inputData.dispatchEvent(new Event('change'));
+        }
+    }
+});
+
 inputData.addEventListener('change', async () => {
+
+    // Se o usuário selecionou mais de 20 pessoas, não roda a busca do Firebase
+    if (selectPessoas.value === "20+") return;
 
     const dataSelecionada = inputData.value;
 
@@ -542,42 +571,46 @@ formReserva.addEventListener('submit', async (e) => {
 
     e.preventDefault();
 
-    btnEnviar.disabled = true;
-
-    btnEnviar.textContent = "Processando...";
-
     const nome = document.getElementById('nome').value;
-
     const whatsappCliente = document.getElementById('whatsapp').value;
-
-    const emailCliente =
-        document.getElementById('email').value
-        || "Não informado";
-
-    const qtdPessoas =
-        document.getElementById('pessoas').value;
-
+    const emailCliente = document.getElementById('email').value || "Não informado";
+    const qtdPessoas = selectPessoas.value;
     const data = inputData.value;
-
-    // Formata a data de AAAA-MM-DD para DD/MM/AAAA para exibir de forma elegante no alerta
     const dataFormatada = data.split('-').reverse().join('/');
+
+    // LÓGICA DO WHATSAPP PARA MAIS DE 20 PESSOAS
+    if (qtdPessoas === "20+") {
+        // !!! ATENÇÃO: COLOQUE O NÚMERO DO SEU CLIENTE AQUI ABAIXO (Apenas números com código do país e DDD) !!!
+        const numeroWhatsCliente = "5591983042701"; 
+        
+        const mensagemWhats = `Olá! Gostaria de organizar uma reserva para um grupo de *Mais de 20 pessoas* no SB Rooftop.%0A%0A*Detalhes do Solicitante:*%0A• *Nome:* ${nome}%0A• *WhatsApp:* ${whatsappCliente}%0A• *E-mail:* ${emailCliente}%0A• *Data desejada:* ${dataFormatada}`;
+        
+        const urlLink = `https://wa.me/${numeroWhatsCliente}?text=${mensagemWhats}`;
+        
+        // Abre o link do WhatsApp em uma nova aba
+        window.open(urlLink, '_blank');
+        
+        // Reseta o formulário por organização
+        formReserva.reset();
+        selectHorario.innerHTML = '<option value="">Selecione uma data primeiro...</option>';
+        selectHorario.disabled = true;
+        btnEnviar.textContent = "Reservar";
+        return; // Interrompe a função aqui para não gravar no Firebase
+    }
+
+    // FLUXO NORMAL (MENOS DE 20 PESSOAS) - SALVA NO FIREBASE
+    btnEnviar.disabled = true;
+    btnEnviar.textContent = "Processando...";
 
     const horario = selectHorario.value;
 
     const dadosAgendamento = {
-
         clienteNome: nome,
-
         clienteWhatsapp: whatsappCliente,
-
         clienteEmail: emailCliente,
-
         quantidadePessoas: qtdPessoas,
-
         horario: horario,
-
         criadoEm: new Date().toISOString()
-
     };
 
     try {
@@ -585,13 +618,13 @@ formReserva.addEventListener('submit', async (e) => {
         const novaReservaRef = push(ref(db, `agendamentos/${EMPRESA_ID}/${data}`));
         await set(novaReservaRef, dadosAgendamento);
 
-        // 2. Chamei a função que simula o alert, mostrando "SB Rooftop" com segurança
+        // 2. Mostra o alerta customizado
         mostrarAlerta(
             "SB Rooftop", 
             `Obrigado, ${nome}! Sua reserva para o dia ${dataFormatada} às ${horario} foi realizada com sucesso.`
         );
 
-        // 3. Reseta o formulário para o próximo cliente
+        // 3. Reseta o formulário
         formReserva.reset();
         selectHorario.disabled = true;
         selectHorario.innerHTML = '<option value="">Selecione uma data primeiro...</option>';
