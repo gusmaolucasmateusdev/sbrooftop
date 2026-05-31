@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciamento - Reservas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        body { 
+            font-family: 'Inter', system-ui, -apple-system, sans-serif; 
+            max-width: 850px; 
+            margin: 0 auto; 
+            padding: 40px 20px; 
+            background-color: #f7f4ef; 
+            color: #2c2a29;
+        }
+        
+        h2 { 
+            font-family: 'Cormorant Garamond', serif; 
+            color: #1a1918; 
+            text-align: center; 
+            font-size: 32px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            margin-bottom: 30px;
+        }
+        
+        .filtro-data { 
+            margin-bottom: 30px; 
+            text-align: center; 
+            font-size: 15px;
+        }
+
+        .filtro-data label {
+            color: #5c5854;
+            font-weight: 500;
+        }
+        
+        input[type="date"] { 
+            padding: 10px 14px; 
+            font-size: 15px; 
+            font-family: inherit;
+            border-radius: 6px; 
+            border: 1px solid #dcd6cd; 
+            background-color: #ffffff;
+            color: #2c2a29;
+            outline: none;
+            transition: border-color 0.2s;
+            margin-left: 8px;
+        }
+
+        input[type="date"]:focus {
+            border-color: #8c8275;
+        }
+        
+        .lista-reservas { 
+            background: #ffffff; 
+            padding: 10px 25px; 
+            border-radius: 12px; 
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04); 
+            border: 1px solid #eae5dd;
+        }
+        
+        .item-reserva { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 24px 0; 
+            border-bottom: 1px solid #f2ede4; 
+            gap: 20px; 
+        }
+        
+        .item-reserva:last-child { 
+            border-bottom: none; 
+        }
+        
+        .info-cliente { 
+            font-size: 14px; 
+            color: #5c5854; 
+            line-height: 1.6; 
+        }
+        
+        .info-cliente .destaque-hora { 
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 22px; 
+            color: #1a1918; 
+            font-weight: 700; 
+            margin-right: 8px; 
+        }
+        
+        .info-cliente .nome-cliente { 
+            font-size: 16px; 
+            font-weight: 600; 
+            color: #2c2a29; 
+            margin-right: 8px;
+        }
+        
+        /* Badges e Links mais sutis */
+        .badge-pessoas { 
+            background-color: #eae5dd; 
+            color: #4a443f; 
+            padding: 4px 10px; 
+            border-radius: 20px; 
+            font-size: 12px; 
+            font-weight: 500; 
+        }
+        
+        .link-whatsapp { 
+            color: #3b7a57; 
+            text-decoration: none; 
+            font-weight: 500; 
+            border-bottom: 1px dashed #3b7a57;
+        }
+        
+        .link-whatsapp:hover { 
+            color: #28543c;
+            border-bottom-style: solid;
+        }
+        
+        .detalhe-secundario { 
+            font-size: 13px; 
+            color: #8c8275; 
+            display: inline-block;
+            margin-top: 6px;
+        }
+
+        /* Botões de ação elegantes */
+        .acoes-reserva { 
+            display: flex; 
+            gap: 8px; 
+        }
+        
+        .btn-acao { 
+            border: none; 
+            padding: 10px 16px; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            font-weight: 500; 
+            font-size: 13px; 
+            font-family: inherit;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-concluir { 
+            background-color: #4a5d4e; 
+            color: white;
+        }
+        
+        .btn-concluir:hover { 
+            background-color: #38463b; 
+        }
+        
+        .btn-cancelar { 
+            background-color: transparent; 
+            color: #a34747;
+            border: 1px solid #f2dcd0;
+        }
+        
+        .btn-cancelar:hover { 
+            background-color: #fff5f5; 
+            border-color: #a34747;
+        }
+        
+        .sem-reservas { 
+            text-align: center; 
+            color: #8c8275; 
+            font-style: italic; 
+            padding: 40px 20px; 
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 18px;
+        }
+
+        /* Responsividade para celulares */
+        @media (max-width: 600px) {
+            .item-reserva {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+            }
+            .acoes-reserva {
+                width: 100%;
+            }
+            .btn-acao {
+                flex: 1;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Painel de Gerenciamento — SB Rooftop</h2>
+
+    <div class="filtro-data">
+        <label for="data-painel">Visualizar Reservas do Dia:</label>
+        <input type="date" id="data-painel">
+    </div>
+
+    <div class="lista-reservas">
+        <div id="container-reservas">
+            <p class="sem-reservas">Selecione uma data para visualizar os agendamentos.</p>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        // CONFIGURAÇÃO DO SEU FIREBASE
+        const firebaseConfig = {
+            apiKey: "AIzaSyBfVK_wdEcilwjNaByZUZBG_kALmThV5JA",
+            authDomain: "alto-do-parque.firebaseapp.com",
+            projectId: "alto-do-parque",
+            storageBucket: "alto-do-parque.firebasestorage.app",
+            messagingSenderId: "435706186663",
+            appId: "1:435706186663:web:9eadc1d4371376768ac482"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        const EMPRESA_ID = "alto_do_parque";
+
+        const inputDataPainel = document.getElementById('data-painel');
+        const containerReservas = document.getElementById('container-reservas');
+
+        const hoje = new Date().toISOString().split('T')[0];
+        inputDataPainel.value = hoje;
+
+        function escutarReservas(dataSelecionada) {
+            if (!dataSelecionada) return;
+
+            const caminhoReservas = ref(db, `agendamentos/${EMPRESA_ID}/${dataSelecionada}`);
+
+            onValue(caminhoReservas, (snapshot) => {
+                containerReservas.innerHTML = "";
+
+                if (snapshot.exists()) {
+                    snapshot.forEach((childSnapshot) => {
+                        const idReserva = childSnapshot.key;
+                        const dados = childSnapshot.val();
+
+                        let emailCliente = dados.clienteEmail || "Não informado";
+                        
+                        const divItem = document.createElement('div');
+                        divItem.className = 'item-reserva';
+                        divItem.innerHTML = `
+                            <div class="info-cliente">
+                                <span class="destaque-hora">${dados.horario}</span>
+                                <span class="nome-cliente">${dados.clienteNome}</span> 
+                                <span class="badge-pessoas">${dados.quantidadePessoas} pessoas</span>
+                                <br>
+                                <span class="detalhe-secundario">
+                                    WhatsApp: <a class="link-whatsapp" href="https://wa.me/55${dados.clienteWhatsapp.replace(/\D/g, '')}" target="_blank">${dados.clienteWhatsapp}</a> | 
+                                    E-mail: ${emailCliente}
+                                </span>
+                            </div>
+                            <div class="acoes-reserva">
+                                <button class="btn-acao btn-concluir" data-id="${idReserva}">Atendido</button>
+                                <button class="btn-acao btn-cancelar" data-id="${idReserva}">Cancelar</button>
+                            </div>
+                        `;
+
+                        divItem.querySelector('.btn-concluir').addEventListener('click', () => {
+                            if(confirm(`Confirmar que a mesa de ${dados.clienteNome} já foi atendida?`)) {
+                                remove(ref(db, `agendamentos/${EMPRESA_ID}/${dataSelecionada}/${idReserva}`));
+                            }
+                        });
+
+                        divItem.querySelector('.btn-cancelar').addEventListener('click', () => {
+                            if(confirm(`Deseja realmente CANCELAR e remover a reserva de ${dados.clienteNome}?`)) {
+                                remove(ref(db, `agendamentos/${EMPRESA_ID}/${dataSelecionada}/${idReserva}`));
+                            }
+                        });
+
+                        containerReservas.appendChild(divItem);
+                    });
+                } else {
+                    containerReservas.innerHTML = '<p class="sem-reservas">Nenhuma reserva para este dia.</p>';
+                }
+            });
+        }
+
+        inputDataPainel.addEventListener('change', () => {
+            escutarReservas(inputDataPainel.value);
+        });
+
+        escutarReservas(hoje);
+    </script>
+</body>
+</html>
