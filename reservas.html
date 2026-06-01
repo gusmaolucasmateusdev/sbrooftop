@@ -421,13 +421,12 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 const EMPRESA_ID = "alto_do_parque";
+const LIMITE_MESAS_DIARIO = 12; // Limite máximo de mesas ocupadas por dia
 
 const horariosFuncionamento = [
     "18:00",
     "19:00",
     "20:00",
-    "21:00",
-    "22:00"
 ];
 
 const inputData = document.getElementById('data');
@@ -461,20 +460,17 @@ customAlertBtn.addEventListener('click', () => {
 // Listener para quando o usuário alterar a quantidade de pessoas
 selectPessoas.addEventListener('change', () => {
     if (selectPessoas.value === "20+") {
-        // Se for mais de 20 pessoas, não há necessidade de escolher horário ou validar data do banco
         selectHorario.innerHTML = `<option value="WhatsApp">Tratar via WhatsApp</option>`;
         selectHorario.disabled = true;
         btnEnviar.disabled = false;
         btnEnviar.textContent = "Chamar no WhatsApp";
     } else {
-        // Caso mude de volta para menos de 20, restaura o fluxo normal
         btnEnviar.textContent = "Reservar";
         if (!inputData.value) {
             selectHorario.innerHTML = `<option value="">Selecione uma data primeiro...</option>`;
             selectHorario.disabled = true;
             btnEnviar.disabled = true;
         } else {
-            // Dispara a busca de horários novamente para a data selecionada
             inputData.dispatchEvent(new Event('change'));
         }
     }
@@ -482,7 +478,6 @@ selectPessoas.addEventListener('change', () => {
 
 inputData.addEventListener('change', async () => {
 
-    // Se o usuário selecionou mais de 20 pessoas, não roda a busca do Firebase
     if (selectPessoas.value === "20+") return;
 
     const dataSelecionada = inputData.value;
@@ -496,75 +491,60 @@ inputData.addEventListener('change', async () => {
     `;
 
     selectHorario.disabled = true;
-
     btnEnviar.disabled = true;
 
     try {
-
         const dbRef = ref(db);
-
         const snapshot = await get(
-            child(
-                dbRef,
-                `agendamentos/${EMPRESA_ID}/${dataSelecionada}`
-            )
+            child(dbRef, `agendamentos/${EMPRESA_ID}/${dataSelecionada}`)
         );
 
-        const horariosOcupados = [];
+        let totalReservasNoDia = 0;
 
         if (snapshot.exists()) {
-
-            snapshot.forEach((childSnapshot) => {
-
-                horariosOcupados.push(
-                    childSnapshot.val().horario
-                );
-
+            // Conta quantas reservas (mesas) já foram feitas no dia selecionado
+            snapshot.forEach(() => {
+                totalReservasNoDia++;
             });
-
         }
 
+        // Se o total de mesas do dia atingiu ou passou de 12, bloqueia as novas reservas
+        if (totalReservasNoDia >= LIMITE_MESAS_DIARIO) {
+            selectHorario.innerHTML = `
+                <option value="">
+                    Reservas esgotadas para este dia
+                </option>
+            `;
+            selectHorario.disabled = true;
+            btnEnviar.disabled = true;
+            return;
+        }
+
+        // Se ainda não atingiu o limite de 12 mesas, TODOS os horários de funcionamento continuam disponíveis!
         selectHorario.innerHTML = `
             <option value="">
-                Escolha o melhor horário
+                Escolha o melhor horário (Mesas disponíveis)
             </option>
         `;
 
         horariosFuncionamento.forEach(horario => {
-
-            if (!horariosOcupados.includes(horario)) {
-
-                const option = document.createElement('option');
-
-                option.value = horario;
-
-                option.textContent = horario;
-
-                selectHorario.appendChild(option);
-
-            }
-
+            const option = document.createElement('option');
+            option.value = horario;
+            option.textContent = horario;
+            selectHorario.appendChild(option);
         });
 
         selectHorario.disabled = false;
-
         btnEnviar.disabled = false;
 
     } catch (error) {
-
-        console.error(
-            "Erro ao buscar horários:",
-            error
-        );
-
+        console.error("Erro ao buscar horários:", error);
         selectHorario.innerHTML = `
             <option value="">
                 Erro ao carregar horários
             </option>
         `;
-
     }
-
 });
 
 formReserva.addEventListener('submit', async (e) => {
@@ -580,22 +560,19 @@ formReserva.addEventListener('submit', async (e) => {
 
     // LÓGICA DO WHATSAPP PARA MAIS DE 20 PESSOAS
     if (qtdPessoas === "20+") {
-        // !!! ATENÇÃO: COLOQUE O NÚMERO DO SEU CLIENTE AQUI ABAIXO (Apenas números com código do país e DDD) !!!
         const numeroWhatsCliente = "5591983042701"; 
         
         const mensagemWhats = `Olá! Gostaria de organizar uma reserva para um grupo de *Mais de 20 pessoas* no SB Rooftop.%0A%0A*Detalhes do Solicitante:*%0A• *Nome:* ${nome}%0A• *WhatsApp:* ${whatsappCliente}%0A• *E-mail:* ${emailCliente}%0A• *Data desejada:* ${dataFormatada}`;
         
         const urlLink = `https://wa.me/${numeroWhatsCliente}?text=${mensagemWhats}`;
         
-        // Abre o link do WhatsApp em uma nova aba
         window.open(urlLink, '_blank');
         
-        // Reseta o formulário por organização
         formReserva.reset();
         selectHorario.innerHTML = '<option value="">Selecione uma data primeiro...</option>';
         selectHorario.disabled = true;
         btnEnviar.textContent = "Reservar";
-        return; // Interrompe a função aqui para não gravar no Firebase
+        return;
     }
 
     // FLUXO NORMAL (MENOS DE 20 PESSOAS) - SALVA NO FIREBASE
@@ -614,6 +591,20 @@ formReserva.addEventListener('submit', async (e) => {
     };
 
     try {
+        // Antes de salvar, faz uma última checagem de segurança em tempo real para evitar que duas pessoas enviem juntas e passem do limite
+        const dbRef = ref(db);
+        const snapshotChecagem = await get(child(dbRef, `agendamentos/${EMPRESA_ID}/${data}`));
+        let totalReservasAtual = 0;
+        if (snapshotChecagem.exists()) {
+            snapshotChecagem.forEach(() => { totalReservasAtual++; });
+        }
+
+        if (totalReservasAtual >= LIMITE_MESAS_DIARIO) {
+            mostrarAlerta("SB Rooftop", "Infelizmente as mesas acabaram de esgotar para este dia enquanto você preenchia.");
+            inputData.dispatchEvent(new Event('change'));
+            return;
+        }
+
         // 1. Salva os dados no Firebase
         const novaReservaRef = push(ref(db, `agendamentos/${EMPRESA_ID}/${data}`));
         await set(novaReservaRef, dadosAgendamento);
