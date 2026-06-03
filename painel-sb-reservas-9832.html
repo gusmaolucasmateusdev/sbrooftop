@@ -28,9 +28,19 @@
             margin-bottom: 30px;
         }
         
+        .topo-painel {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+            border: 1px solid #eae5dd;
+        }
+
         .filtro-data { 
-            margin-bottom: 30px; 
-            text-align: center; 
             font-size: 15px;
         }
 
@@ -39,7 +49,7 @@
             font-weight: 500;
         }
         
-        input[type="date"] { 
+        input[type="date"], input[type="text"], input[type="tel"], input[type="email"], select { 
             padding: 10px 14px; 
             font-size: 15px; 
             font-family: inherit;
@@ -49,11 +59,14 @@
             color: #2c2a29;
             outline: none;
             transition: border-color 0.2s;
-            margin-left: 8px;
         }
 
-        input[type="date"]:focus {
+        input:focus, select:focus {
             border-color: #8c8275;
+        }
+
+        input[type="date"] {
+            margin-left: 8px;
         }
         
         .lista-reservas { 
@@ -98,7 +111,6 @@
             margin-right: 8px;
         }
         
-        /* Badges e Links mais sutis */
         .badge-pessoas { 
             background-color: #eae5dd; 
             color: #4a443f; 
@@ -127,7 +139,6 @@
             margin-top: 6px;
         }
 
-        /* Botões de ação elegantes */
         .acoes-reserva { 
             display: flex; 
             gap: 8px; 
@@ -163,6 +174,22 @@
             background-color: #fff5f5; 
             border-color: #a34747;
         }
+
+        .btn-add-manual {
+            background-color: #1a1918;
+            color: #ffffff;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.2s;
+        }
+
+        .btn-add-manual:hover {
+            background-color: #3d3a37;
+        }
         
         .sem-reservas { 
             text-align: center; 
@@ -173,8 +200,88 @@
             font-size: 18px;
         }
 
-        /* Responsividade para celulares */
+        /* ESTILOS DO MODAL DE RESERVA MANUAL */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-box {
+            background: #ffffff;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 1px solid #eae5dd;
+            transform: translateY(-20px);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .modal-box {
+            transform: translateY(0);
+        }
+
+        .modal-box h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 26px;
+            margin-bottom: 20px;
+            color: #1a1918;
+            border-bottom: 1px solid #f2ede4;
+            padding-bottom: 10px;
+        }
+
+        .form-grupo {
+            margin-bottom: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-grupo label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #5c5854;
+        }
+
+        .form-grupo input, .form-grupo select {
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .modal-botoes {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 25px;
+            border-top: 1px solid #f2ede4;
+            padding-top: 15px;
+        }
+
         @media (max-width: 600px) {
+            .topo-painel {
+                flex-direction: column;
+                gap: 16px;
+                align-items: stretch;
+                text-align: center;
+            }
             .item-reserva {
                 flex-direction: column;
                 align-items: flex-start;
@@ -194,9 +301,12 @@
 
     <h2>Painel de Gerenciamento — SB Rooftop</h2>
 
-    <div class="filtro-data">
-        <label for="data-painel">Visualizar Reservas do Dia:</label>
-        <input type="date" id="data-painel">
+    <div class="topo-painel">
+        <div class="filtro-data">
+            <label for="data-painel">Visualizar Reservas do Dia:</label>
+            <input type="date" id="data-painel">
+        </div>
+        <button class="btn-add-manual" id="btn-abrir-modal">+ Nova Reserva Manual</button>
     </div>
 
     <div class="lista-reservas">
@@ -205,9 +315,58 @@
         </div>
     </div>
 
+    <div class="modal-overlay" id="modalManual">
+        <div class="modal-box">
+            <h3>Lançar Reserva Manual (WhatsApp/Balcão)</h3>
+            <form id="form-manual">
+                <div class="form-grupo">
+                    <label for="m-nome">Nome do Cliente</label>
+                    <input type="text" id="m-nome" required placeholder="Ex: João Silva">
+                </div>
+                <div class="form-grupo">
+                    <label for="m-whatsapp">WhatsApp</label>
+                    <input type="tel" id="m-whatsapp" required placeholder="Ex: (91) 98304-2701">
+                </div>
+                <div class="form-grupo">
+                    <label for="m-email">E-mail (Opcional)</label>
+                    <input type="email" id="m-email" placeholder="Ex: cliente@email.com">
+                </div>
+                <div class="form-grupo">
+                    <label for="m-pessoas">Quantidade de Pessoas</label>
+                    <select id="m-pessoas" required>
+                        <option value="4">4 pessoas</option>
+                        <option value="5">5 pessoas</option>
+                        <option value="6">6 pessoas</option>
+                        <option value="7">7 pessoas</option>
+                        <option value="8">8 pessoas</option>
+                        <option value="10">10 pessoas</option>
+                        <option value="15">15 pessoas</option>
+                        <option value="20+">Mais de 20 pessoas</option>
+                    </select>
+                </div>
+                <div class="form-grupo">
+                    <label for="m-data">Data da Reserva</label>
+                    <input type="date" id="m-data" required>
+                </div>
+                <div class="form-grupo">
+                    <label for="m-horario">Horário</label>
+                    <select id="m-horario" required>
+                        <option value="18:00">18:00</option>
+                        <option value="19:00">19:00</option>
+                        <option value="20:00">20:00</option>
+                    </select>
+                </div>
+                <div class="modal-botoes">
+                    <button type="button" class="btn-acao btn-cancelar" id="btn-fechar-modal">Voltar</button>
+                    <button type="submit" class="btn-acao btn-concluir">Salvar no Painel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { getDatabase, ref, onValue, remove, push, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
         // CONFIGURAÇÃO DO SEU FIREBASE
         const firebaseConfig = {
@@ -227,8 +386,64 @@
         const inputDataPainel = document.getElementById('data-painel');
         const containerReservas = document.getElementById('container-reservas');
 
+        // Elementos do Modal Manual
+        const modalManual = document.getElementById('modalManual');
+        const btnAbrirModal = document.getElementById('btn-abrir-modal');
+        const btnFecharModal = document.getElementById('btn-fechar-modal');
+        const formManual = document.getElementById('form-manual');
+
         const hoje = new Date().toISOString().split('T')[0];
         inputDataPainel.value = hoje;
+
+        // Controle de abertura/fechamento do Modal
+        btnAbrirModal.addEventListener('click', () => {
+            document.getElementById('m-data').value = inputDataPainel.value; // Pré-seleciona a data que o garçom já estava olhando
+            modalManual.classList.add('active');
+        });
+        
+        btnFecharModal.addEventListener('click', () => {
+            modalManual.classList.remove('active');
+            formManual.reset();
+        });
+
+        // Evento para salvar os dados manuais inseridos pelo Garçom
+        formManual.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const nome = document.getElementById('m-nome').value;
+            const whatsapp = document.getElementById('m-whatsapp').value;
+            const email = document.getElementById('m-email').value || "Não informado";
+            const pessoas = document.getElementById('m-pessoas').value;
+            const dataSelecionada = document.getElementById('m-data').value;
+            const horario = document.getElementById('m-horario').value;
+
+            const dadosAgendamento = {
+                clienteNome: nome,
+                clienteWhatsapp: whatsapp,
+                clienteEmail: email,
+                quantidadePessoas: pessoas,
+                horario: horario,
+                criadoEm: new Date().toISOString()
+            };
+
+            try {
+                // Insere diretamente na data escolhida, sem travas para o dia 12 ou limite de 20+ pessoas
+                const novaReservaRef = push(ref(db, `agendamentos/${EMPRESA_ID}/${dataSelecionada}`));
+                await set(novaReservaRef, dadosAgendamento);
+                
+                alert("Reserva manual registrada com sucesso!");
+                modalManual.classList.remove('active');
+                formManual.reset();
+                
+                // Atualiza o painel para a data onde a reserva foi salva para o garçom ver ela na lista
+                inputDataPainel.value = dataSelecionada;
+                escutarReservas(dataSelecionada);
+                
+            } catch (error) {
+                console.error("Erro ao salvar reserva manual:", error);
+                alert("Erro ao salvar. Verifique a conexão.");
+            }
+        });
 
         function escutarReservas(dataSelecionada) {
             if (!dataSelecionada) return;
