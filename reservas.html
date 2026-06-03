@@ -484,6 +484,17 @@ inputData.addEventListener('change', async () => {
 
     if (!dataSelecionada) return;
 
+    // --- AJUSTE DIA DOS NAMORADOS (12 DE JUNHO) ---
+    // O input date retorna no formato YYYY-MM-DD (ex: 2026-06-12)
+    if (dataSelecionada.endsWith("-06-12")) {
+        selectHorario.innerHTML = `<option value="WhatsApp">Especial Dia dos Namorados via WhatsApp</option>`;
+        selectHorario.disabled = true;
+        btnEnviar.disabled = false;
+        btnEnviar.textContent = "Chamar no WhatsApp";
+        mostrarAlerta("SB Rooftop", "Para o Dia dos Namorados (12/06), o atendimento e as reservas são feitos exclusivamente de forma direta pelo nosso WhatsApp!");
+        return;
+    }
+
     selectHorario.innerHTML = `
         <option value="">
             Carregando horários...
@@ -536,6 +547,7 @@ inputData.addEventListener('change', async () => {
 
         selectHorario.disabled = false;
         btnEnviar.disabled = false;
+        btnEnviar.textContent = "Reservar"; // Garante que volta para o texto normal caso mude de data
 
     } catch (error) {
         console.error("Erro ao buscar horários:", error);
@@ -557,21 +569,35 @@ formReserva.addEventListener('submit', async (e) => {
     const qtdPessoas = selectPessoas.value;
     const data = inputData.value;
     const dataFormatada = data.split('-').reverse().join('/');
+    const numeroWhatsCliente = "5591983042701"; 
 
-    // LÓGICA DO WHATSAPP PARA MAIS DE 20 PESSOAS
-    if (qtdPessoas === "20+") {
-        const numeroWhatsCliente = "5591983042701"; 
-        
-        const mensagemWhats = `Olá! Gostaria de organizar uma reserva para um grupo de *Mais de 20 pessoas* no SB Rooftop.%0A%0A*Detalhes do Solicitante:*%0A• *Nome:* ${nome}%0A• *WhatsApp:* ${whatsappCliente}%0A• *E-mail:* ${emailCliente}%0A• *Data desejada:* ${dataFormatada}`;
+    // --- LOGICA DO WHATSAPP PARA O DIA DOS NAMORADOS ---
+    if (data.endsWith("-06-12")) {
+        const mensagemWhats = `Olá! Gostaria de realizar uma reserva especial para o *Dia dos Namorados (12/06)* no SB Rooftop.%0A%0A*Detalhes do Solicitante:*%0A• *Nome:* ${nome}%0A• *WhatsApp:* ${whatsappCliente}%0A• *E-mail:* ${emailCliente}%0A• *Quantidade de Pessoas:* ${qtdPessoas}`;
         
         const urlLink = `https://wa.me/${numeroWhatsCliente}?text=${mensagemWhats}`;
-        
         window.open(urlLink, '_blank');
         
         formReserva.reset();
         selectHorario.innerHTML = '<option value="">Selecione uma data primeiro...</option>';
         selectHorario.disabled = true;
         btnEnviar.textContent = "Reservar";
+        btnEnviar.disabled = true;
+        return;
+    }
+
+    // LÓGICA DO WHATSAPP PARA MAIS DE 20 PESSOAS
+    if (qtdPessoas === "20+") {
+        const mensagemWhats = `Olá! Gostaria de organizar uma reserva para um grupo de *Mais de 20 pessoas* no SB Rooftop.%0A%0A*Detalhes do Solicitante:*%0A• *Nome:* ${nome}%0A• *WhatsApp:* ${whatsappCliente}%0A• *E-mail:* ${emailCliente}%0A• *Data desejada:* ${dataFormatada}`;
+        
+        const urlLink = `https://wa.me/${numeroWhatsCliente}?text=${mensagemWhats}`;
+        window.open(urlLink, '_blank');
+        
+        formReserva.reset();
+        selectHorario.innerHTML = '<option value="">Selecione uma data primeiro...</option>';
+        selectHorario.disabled = true;
+        btnEnviar.textContent = "Reservar";
+        btnEnviar.disabled = true;
         return;
     }
 
