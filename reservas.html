@@ -484,6 +484,16 @@ inputData.addEventListener('change', async () => {
 
     if (!dataSelecionada) return;
 
+    // --- AJUSTE DATA ESGOTADA (13 DE JUNHO) ---
+    if (dataSelecionada.endsWith("-06-13")) {
+        selectHorario.innerHTML = `<option value="">Reservas esgotadas para este dia</option>`;
+        selectHorario.disabled = true;
+        btnEnviar.disabled = true;
+        btnEnviar.textContent = "Reservar";
+        mostrarAlerta("SB Rooftop", "Infelizmente as reservas para o dia 13/06 estão completamente esgotadas. Por favor, escolha outra data para sua visita!");
+        return;
+    }
+
     // --- AJUSTE DIA DOS NAMORADOS (12 DE JUNHO) ---
     // O input date retorna no formato YYYY-MM-DD (ex: 2026-06-12)
     if (dataSelecionada.endsWith("-06-12")) {
@@ -570,6 +580,12 @@ formReserva.addEventListener('submit', async (e) => {
     const data = inputData.value;
     const dataFormatada = data.split('-').reverse().join('/');
     const numeroWhatsCliente = "5591983042701"; 
+
+    // Bloqueio extra de segurança no envio para o dia 13/06 (evita submissões forçadas por inspecionar elemento)
+    if (data.endsWith("-06-13")) {
+        mostrarAlerta("SB Rooftop", "As reservas para o dia 13/06 estão esgotadas.");
+        return;
+    }
 
     // --- LOGICA DO WHATSAPP PARA O DIA DOS NAMORADOS ---
     if (data.endsWith("-06-12")) {
